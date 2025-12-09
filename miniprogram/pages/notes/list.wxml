@@ -1,0 +1,310 @@
+<navigation-bar
+  title="记事本"
+  back="{{true}}"
+  color="#1f2d3d"
+  background="#ffffff"
+></navigation-bar>
+<scroll-view class="page-scroll" scroll-y type="list">
+  <view class="notes-page">
+    <view class="search-bar">
+      <view class="search-icon"></view>
+      <input
+        class="search-input"
+        placeholder="搜索笔记内容"
+        value="{{searchKeyword}}"
+        bindinput="onSearchInput"
+      />
+      <view
+        wx:if="{{searchKeyword}}"
+        class="search-clear"
+        bindtap="onClearSearch"
+      >
+        ✕
+      </view>
+    </view>
+
+    <view class="category-filter">
+      <view
+        class="category-item {{selectedCategory === '' ? 'active' : ''}}"
+        data-category="{{''}}"
+        bindtap="onCategoryChange"
+      >
+        <text>全部</text>
+      </view>
+      <block wx:for="{{categories}}" wx:key="id">
+        <view
+          class="category-item {{selectedCategory === item.id ? 'active' : ''}}"
+          data-category="{{item.id}}"
+          bindtap="onCategoryChange"
+        >
+          <view class="category-dot" style="background: {{item.color}};"></view>
+          <text>{{item.name}}</text>
+        </view>
+      </block>
+      <view class="category-item category-add" bindtap="onAddCategory">
+        <text>+ 添加分类</text>
+      </view>
+    </view>
+
+    <block wx:if="{{cards.length}}">
+      <block wx:for="{{cards}}" wx:key="id">
+        <view
+          class="note-card note-card-{{item.cover || 'summer'}}"
+          data-id="{{item.id}}"
+          bindtap="onCardTap"
+          bindlongpress="onCardLongPress"
+        >
+          <view class="note-card-header">
+            <text class="note-title">{{item.title}}</text>
+            <text wx:if="{{item.tag}}" class="note-tag">{{item.tag}}</text>
+          </view>
+          <view class="note-content-preview">{{item.content}}</view>
+          <text class="note-time">{{item.createdAtText}}</text>
+          <view wx:if="{{item.tags && item.tags.length > 0}}" class="note-card-footer">
+            <view class="note-tags-list">
+              <block wx:for="{{item.tags}}" wx:key="*this" wx:for-item="tag">
+                <text class="note-tag-item">#{{tag}}</text>
+              </block>
+            </view>
+          </view>
+        </view>
+      </block>
+    </block>
+    <view wx:else class="notes-empty">
+      <text class="empty-face">😊</text>
+      <text class="empty-title">还没有记录</text>
+      <text class="empty-desc">保持放松，也别忘了记录灵感</text>
+    </view>
+  </view>
+</scroll-view>
+
+<view class="notes-fab" bindtap="onAddTap">
+  <view class="fab-icon">
+    <view class="fab-square"></view>
+    <view class="fab-pencil"></view>
+  </view>
+  <text class="fab-label">添加</text>
+</view>
+
+<!-- 新建记事本弹窗 -->
+<view wx:if="{{showCreateModal}}" class="create-modal-mask" bindtap="onCloseCreateModal">
+  <view class="create-modal-panel" catchtap="noop">
+    <view class="create-modal-header">
+      <view class="create-modal-cancel" bindtap="onCloseCreateModal">
+        <text>取消</text>
+      </view>
+      <text class="create-modal-title">新建记事本</text>
+      <view class="create-modal-confirm" bindtap="onCreateNote">
+        <text>创建</text>
+      </view>
+    </view>
+    
+    <scroll-view 
+      class="create-modal-body" 
+      scroll-y="{{true}}" 
+      enable-back-to-top="{{false}}" 
+      enable-flex="{{true}}"
+      scroll-into-view="{{scrollIntoView}}"
+      scroll-with-animation="{{true}}"
+    >
+      <view class="create-modal-content">
+      <view class="create-input-group">
+        <text class="create-label">名称</text>
+        <input
+          id="name-input"
+          class="create-input"
+          placeholder="未命名记事本"
+          value="{{newNoteName}}"
+          bindinput="onNoteNameInput"
+          bindfocus="onInputFocus"
+          bindblur="onInputBlur"
+          adjust-position="{{true}}"
+          hold-keyboard="{{false}}"
+          cursor-spacing="{{20}}"
+        />
+      </view>
+
+      <view class="create-input-group">
+        <text class="create-label">标签</text>
+        <view class="create-tag-selector" bindtap="onShowTagSelector">
+          <text class="create-tag-placeholder">添加标签</text>
+          <text class="create-tag-arrow">›</text>
+        </view>
+        <view wx:if="{{selectedTags.length > 0}}" class="create-tags-display">
+          <block wx:for="{{selectedTags}}" wx:key="*this" wx:for-item="tag">
+            <view class="create-tag-chip">
+              <text>#{{tag}}</text>
+              <text class="create-tag-remove" data-tag="{{tag}}" catchtap="onRemoveTag">✕</text>
+            </view>
+          </block>
+        </view>
+      </view>
+
+      <view class="create-style-tabs">
+        <view
+          class="create-style-tab {{coverTab === 'cover' ? 'active' : ''}}"
+          data-tab="cover"
+          bindtap="onSwitchTab"
+        >
+          <text>封面选择</text>
+        </view>
+        <view
+          class="create-style-tab {{coverTab === 'template' ? 'active' : ''}}"
+          data-tab="template"
+          bindtap="onSwitchTab"
+        >
+          <text>内页选择</text>
+        </view>
+      </view>
+
+      <!-- 封面选择 -->
+      <view wx:if="{{coverTab === 'cover'}}" class="create-style-grid">
+        <view
+          class="create-style-item {{selectedCover === 'summer' ? 'selected' : ''}}"
+          data-cover="summer"
+          bindtap="onSelectCover"
+        >
+          <view class="create-style-preview summer"></view>
+          <text class="create-style-name">夏日</text>
+          <view wx:if="{{selectedCover === 'summer'}}" class="create-style-check">✓</view>
+        </view>
+        <view
+          class="create-style-item {{selectedCover === 'dusk' ? 'selected' : ''}}"
+          data-cover="dusk"
+          bindtap="onSelectCover"
+        >
+          <view class="create-style-preview dusk"></view>
+          <text class="create-style-name">黄昏</text>
+          <view wx:if="{{selectedCover === 'dusk'}}" class="create-style-check">✓</view>
+        </view>
+        <view
+          class="create-style-item {{selectedCover === 'wave' ? 'selected' : ''}}"
+          data-cover="wave"
+          bindtap="onSelectCover"
+        >
+          <view class="create-style-preview wave"></view>
+          <text class="create-style-name">海浪</text>
+          <view wx:if="{{selectedCover === 'wave'}}" class="create-style-check">✓</view>
+        </view>
+        <view
+          class="create-style-item {{selectedCover === 'dream' ? 'selected' : ''}}"
+          data-cover="dream"
+          bindtap="onSelectCover"
+        >
+          <view class="create-style-preview dream"></view>
+          <text class="create-style-name">馥梦</text>
+          <view wx:if="{{selectedCover === 'dream'}}" class="create-style-check">✓</view>
+        </view>
+        <view
+          class="create-style-item {{selectedCover === 'green' ? 'selected' : ''}}"
+          data-cover="green"
+          bindtap="onSelectCover"
+        >
+          <view class="create-style-preview green"></view>
+          <text class="create-style-name">绿荫</text>
+          <view wx:if="{{selectedCover === 'green'}}" class="create-style-check">✓</view>
+        </view>
+        <view
+          class="create-style-item {{selectedCover === 'lemon' ? 'selected' : ''}}"
+          data-cover="lemon"
+          bindtap="onSelectCover"
+        >
+          <view class="create-style-preview lemon"></view>
+          <text class="create-style-name">柠檬</text>
+          <view wx:if="{{selectedCover === 'lemon'}}" class="create-style-check">✓</view>
+        </view>
+      </view>
+
+      <!-- 内页选择 -->
+      <view wx:if="{{coverTab === 'template'}}" class="create-template-grid">
+        <view class="create-template-section">
+          <text class="create-template-category">极简</text>
+          <view class="create-template-items">
+            <view
+              class="create-template-item {{selectedTemplate === 'blank' ? 'selected' : ''}}"
+              data-template="blank"
+              bindtap="onSelectTemplate"
+            >
+              <view class="create-template-preview blank"></view>
+              <text class="create-template-name">空白</text>
+              <view wx:if="{{selectedTemplate === 'blank'}}" class="create-style-check">✓</view>
+            </view>
+            <view
+              class="create-template-item {{selectedTemplate === 'dot' ? 'selected' : ''}}"
+              data-template="dot"
+              bindtap="onSelectTemplate"
+            >
+              <view class="create-template-preview dot"></view>
+              <text class="create-template-name">点阵</text>
+              <view wx:if="{{selectedTemplate === 'dot'}}" class="create-style-check">✓</view>
+            </view>
+            <view
+              class="create-template-item {{selectedTemplate === 'grid' ? 'selected' : ''}}"
+              data-template="grid"
+              bindtap="onSelectTemplate"
+            >
+              <view class="create-template-preview grid"></view>
+              <text class="create-template-name">方格</text>
+              <view wx:if="{{selectedTemplate === 'grid'}}" class="create-style-check">✓</view>
+            </view>
+            <view
+              class="create-template-item {{selectedTemplate === 'line' ? 'selected' : ''}}"
+              data-template="line"
+              bindtap="onSelectTemplate"
+            >
+              <view class="create-template-preview line"></view>
+              <text class="create-template-name">笔记</text>
+              <view wx:if="{{selectedTemplate === 'line'}}" class="create-style-check">✓</view>
+            </view>
+          </view>
+        </view>
+        <view class="create-template-section">
+          <text class="create-template-category">复古</text>
+          <view class="create-template-items">
+            <view
+              class="create-template-item {{selectedTemplate === 'vintage1' ? 'selected' : ''}}"
+              data-template="vintage1"
+              bindtap="onSelectTemplate"
+            >
+              <view class="create-template-preview vintage1"></view>
+              <text class="create-template-name">复古1</text>
+              <view wx:if="{{selectedTemplate === 'vintage1'}}" class="create-style-check">✓</view>
+            </view>
+            <view
+              class="create-template-item {{selectedTemplate === 'vintage2' ? 'selected' : ''}}"
+              data-template="vintage2"
+              bindtap="onSelectTemplate"
+            >
+              <view class="create-template-preview vintage2"></view>
+              <text class="create-template-name">复古2</text>
+              <view wx:if="{{selectedTemplate === 'vintage2'}}" class="create-style-check">✓</view>
+            </view>
+          </view>
+        </view>
+      </view>
+      </view>
+    </scroll-view>
+  </view>
+</view>
+
+<view
+  wx:if="{{actionSheet.visible}}"
+  class="notes-action-mask"
+  bindtap="onActionMaskTap"
+>
+  <view class="notes-action-panel" catchtap="noop">
+    <text class="action-preview">{{actionSheet.preview}}</text>
+    <view class="action-buttons">
+      <button
+        class="action-btn"
+        data-pinned="{{actionSheet.pinned}}"
+        bindtap="onActionPin"
+      >
+        {{actionSheet.pinned ? '取消置顶' : '置顶'}}
+      </button>
+      <button class="action-btn danger" bindtap="onActionDelete">删除</button>
+    </view>
+  </view>
+</view>
+
+

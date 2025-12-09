@@ -1,0 +1,114 @@
+<navigation-bar
+  title="番茄钟"
+  back="{{true}}"
+  color="#1f2d3d"
+  background="#ffffff"
+></navigation-bar>
+<scroll-view class="page-scroll" scroll-y type="list">
+  <view class="pomodoro-page">
+    <!-- 倒计时显示 -->
+    <view class="timer-section">
+      <view class="timer-circle">
+        <view class="timer-progress-bg" style="opacity: {{progressOpacity}};"></view>
+        <view class="timer-inner">
+          <view class="timer-time">{{displayTime}}</view>
+          <view class="timer-status">{{statusText}}</view>
+          <view class="timer-task" wx:if="{{currentTask}}">{{currentTask}}</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 控制按钮 -->
+    <view class="control-section">
+      <button 
+        class="control-btn {{isRunning ? 'pause' : 'start'}}"
+        bindtap="onToggleTimer"
+      >
+        {{isRunning ? '暂停' : '开始'}}
+      </button>
+      <button class="control-btn reset" bindtap="onResetTimer">重置</button>
+    </view>
+
+    <!-- 任务输入 -->
+    <view class="task-section">
+      <input 
+        class="task-input"
+        placeholder="输入任务名称（可选）"
+        value="{{taskName}}"
+        bindinput="onTaskInput"
+      />
+    </view>
+
+    <!-- 统计信息 -->
+    <view class="stats-section">
+      <view class="stats-card">
+        <text class="stats-label">今日完成</text>
+        <text class="stats-value">{{todayCount}}</text>
+        <text class="stats-unit">个番茄</text>
+      </view>
+      <view class="stats-card">
+        <text class="stats-label">累计时长</text>
+        <text class="stats-value">{{totalMinutes}}</text>
+        <text class="stats-unit">分钟</text>
+      </view>
+    </view>
+
+    <!-- 设置按钮 -->
+    <view class="settings-section">
+      <button class="settings-btn" bindtap="onOpenSettings">设置</button>
+    </view>
+  </view>
+</scroll-view>
+
+<!-- 设置弹窗 -->
+<view wx:if="{{showSettings}}" class="settings-modal-mask" bindtap="onCloseSettings">
+  <view class="settings-modal" catchtap="noop">
+    <view class="modal-header">
+      <text class="modal-title">番茄钟设置</text>
+      <text class="modal-close" bindtap="onCloseSettings">✕</text>
+    </view>
+    <view class="settings-content">
+      <view class="setting-item">
+        <text class="setting-label">专注时长（分钟）</text>
+        <input 
+          class="setting-input"
+          type="number"
+          value="{{settings.focusDuration}}"
+          bindinput="onFocusDurationInput"
+          bindblur="onFocusDurationBlur"
+        />
+      </view>
+      <view class="setting-item">
+        <text class="setting-label">短休息（分钟）</text>
+        <input 
+          class="setting-input"
+          type="number"
+          value="{{settings.shortBreakDuration}}"
+          bindinput="onShortBreakInput"
+          bindblur="onShortBreakBlur"
+        />
+      </view>
+      <view class="setting-item">
+        <text class="setting-label">长休息（分钟）</text>
+        <input 
+          class="setting-input"
+          type="number"
+          value="{{settings.longBreakDuration}}"
+          bindinput="onLongBreakInput"
+          bindblur="onLongBreakBlur"
+        />
+      </view>
+      <view class="setting-item">
+        <text class="setting-label">提醒音效</text>
+        <switch 
+          checked="{{settings.soundEnabled}}"
+          bindchange="onSoundToggle"
+        />
+      </view>
+    </view>
+    <view class="modal-footer">
+      <button class="save-btn" bindtap="onSaveSettings">保存</button>
+    </view>
+  </view>
+</view>
+

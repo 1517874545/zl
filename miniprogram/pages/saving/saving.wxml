@@ -1,0 +1,316 @@
+<navigation-bar
+  title="存钱罐"
+  back="{{true}}"
+  color="#d63384"
+  background="#ffffff"
+></navigation-bar>
+<view class="saving-container">
+  <!-- 余额卡片 -->
+  <view class="balance-card">
+    <text class="balance-label">总余额</text>
+    <text class="balance-amount">¥{{balanceText}}</text>
+    <view class="balance-stats">
+      <text class="stat-item">收入 ¥{{statistics.totalIncomeText}}</text>
+      <text class="stat-item">支出 ¥{{statistics.totalExpenseText}}</text>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-buttons">
+    <view class="action-btn income-btn" bindtap="onAddRecord" data-type="income">
+      <text class="btn-icon">+</text>
+      <text class="btn-text">记收入</text>
+    </view>
+    <view class="action-btn expense-btn" bindtap="onAddRecord" data-type="expense">
+      <text class="btn-icon">−</text>
+      <text class="btn-text">记支出</text>
+    </view>
+  </view>
+
+  <!-- 标签页 -->
+  <view class="tabs">
+    <view 
+      class="tab-item {{currentTab === 'records' ? 'active' : ''}}"
+      bindtap="onTabChange"
+      data-tab="records"
+    >
+      记录
+    </view>
+    <view 
+      class="tab-item {{currentTab === 'statistics' ? 'active' : ''}}"
+      bindtap="onTabChange"
+      data-tab="statistics"
+    >
+      统计
+    </view>
+    <view 
+      class="tab-item {{currentTab === 'budget' ? 'active' : ''}}"
+      bindtap="onTabChange"
+      data-tab="budget"
+    >
+      <view class="tab-content-wrapper">
+        <text>预算</text>
+        <view class="budget-indicator {{budgetStatusColor}}"></view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 记录列表 -->
+  <view class="tab-content" wx:if="{{currentTab === 'records'}}">
+    <view class="records-list">
+      <view 
+        class="month-group"
+        wx:for="{{groupedRecords}}"
+        wx:key="monthKey"
+      >
+        <view class="month-header">
+          <text class="month-label">{{item.monthLabel}}</text>
+        </view>
+        <view 
+          class="record-item {{record.type === 'income' ? 'income' : 'expense'}}"
+          wx:for="{{item.records}}"
+          wx:for-item="record"
+          wx:key="id"
+        >
+          <view class="record-main">
+            <view class="record-left">
+              <text class="record-category">{{getCategoryName(record.category, record.type)}}</text>
+              <text class="record-source" wx:if="{{record.source}}">{{record.source}}</text>
+              <text class="record-note" wx:if="{{record.note}}">{{record.note}}</text>
+              <text class="record-date">{{formatDateTime(record.recordDate || record.record_date || '', record.created_at || record.createdAt || '')}}</text>
+            </view>
+            <view class="record-right">
+              <text class="record-amount {{record.type === 'income' ? 'income' : 'expense'}}">
+                {{record.type === 'income' ? '+' : '-'}}¥{{record.amountText}}
+              </text>
+              <text class="record-delete" bindtap="onDeleteRecord" data-id="{{record.id}}">删除</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="view-all" wx:if="{{records.length > 0}}" bindtap="onViewAllRecords">
+      <text>查看全部记录 →</text>
+    </view>
+  </view>
+
+  <!-- 统计 -->
+  <view class="tab-content" wx:if="{{currentTab === 'statistics'}}">
+    <view class="stats-section">
+      <view class="stats-card">
+        <text class="stats-title">支出分类</text>
+        <view class="category-list">
+          <view 
+            class="category-item"
+            wx:for="{{statistics.expenseByCategory}}"
+            wx:key="category"
+            wx:for-item="item"
+            wx:for-index="category"
+          >
+            <text class="category-name">{{getCategoryName(category, 'expense')}}</text>
+            <text class="category-amount">¥{{item.text}}</text>
+          </view>
+        </view>
+      </view>
+      <view class="stats-card">
+        <text class="stats-title">收入分类</text>
+        <view class="category-list">
+          <view 
+            class="category-item"
+            wx:for="{{statistics.incomeByCategory}}"
+            wx:key="category"
+            wx:for-item="item"
+            wx:for-index="category"
+          >
+            <text class="category-name">{{getCategoryName(category, 'income')}}</text>
+            <text class="category-amount">¥{{item.text}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 预算 -->
+  <view class="tab-content" wx:if="{{currentTab === 'budget'}}">
+    <view class="budget-section">
+      <view 
+        class="budget-item"
+        wx:for="{{budgets}}"
+        wx:key="id"
+      >
+        <view class="budget-info">
+          <view class="budget-header">
+            <view class="budget-title-row">
+              <text class="budget-category">{{getCategoryName(item.category, 'expense')}}</text>
+              <text class="budget-month" wx:if="{{item.monthLabel}}">{{item.monthLabel}}</text>
+            </view>
+            <view class="budget-status">
+              <view class="budget-status-indicator {{item.statusColor}}"></view>
+              <text class="budget-status-text">{{item.statusText}}</text>
+            </view>
+          </view>
+          <text class="budget-progress">
+            ¥{{item.currentMonthSpentText}} / ¥{{item.monthlyLimitText}}
+          </text>
+          <view class="budget-bar">
+            <view 
+              class="budget-fill {{item.statusColor}}"
+              style="width: {{item.percentage > 100 ? 100 : item.percentage}}%"
+            ></view>
+          </view>
+          <text class="budget-percentage" wx:if="{{item.percentage >= 90}}">
+            {{item.percentage >= 100 ? '已超预算' : '接近预算，请注意'}}
+          </text>
+        </view>
+        <button class="budget-btn" catchtap="onSetBudget" data-category="{{item.category}}" data-month="{{item.month}}">
+          设置
+        </button>
+      </view>
+      <view class="add-budget" wx:if="{{budgets.length === 0}}">
+        <text>暂无预算设置</text>
+        <text class="add-hint">点击下方按钮添加预算</text>
+      </view>
+      <view class="add-budget-btn">
+        <button class="add-budget-button" catchtap="onAddBudget">添加预算</button>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 月份选择器弹窗 -->
+<view wx:if="{{showMonthPicker}}" class="month-picker-mask" bindtap="onCancelMonthPicker">
+  <view class="month-picker-modal" catchtap="noop">
+    <view class="month-picker-header">
+      <text class="month-picker-title">选择月份</text>
+      <text class="month-picker-close" bindtap="onCancelMonthPicker">✕</text>
+    </view>
+    <scroll-view class="month-picker-content" scroll-y>
+      <view 
+        class="month-picker-item {{selectedMonthIndex === index ? 'active' : ''}}"
+        wx:for="{{monthPickerLabels}}"
+        wx:key="index"
+        wx:for-index="index"
+        bindtap="onSelectMonthItem"
+        data-index="{{index}}"
+      >
+        <text>{{item}}</text>
+        <text class="month-picker-check" wx:if="{{selectedMonthIndex === index}}">✓</text>
+      </view>
+    </scroll-view>
+    <view class="month-picker-footer">
+      <button class="month-picker-btn cancel-btn" bindtap="onCancelMonthPicker">取消</button>
+      <button class="month-picker-btn confirm-btn" bindtap="onConfirmMonthPicker">确认</button>
+    </view>
+  </view>
+</view>
+
+<!-- 分类选择器弹窗 -->
+<view wx:if="{{showCategoryPicker}}" class="month-picker-mask" bindtap="onCancelCategoryPicker">
+  <view class="month-picker-modal" catchtap="noop">
+    <view class="month-picker-header">
+      <text class="month-picker-title">选择分类</text>
+      <text class="month-picker-close" bindtap="onCancelCategoryPicker">✕</text>
+    </view>
+    <scroll-view class="month-picker-content" scroll-y>
+      <view 
+        class="month-picker-item {{selectedCategoryIndex === index ? 'active' : ''}}"
+        wx:for="{{categoryPickerList}}"
+        wx:key="id"
+        wx:for-index="index"
+        bindtap="onSelectCategoryItem"
+        data-index="{{index}}"
+      >
+        <text>{{item.icon}} {{item.name}}</text>
+        <text class="month-picker-check" wx:if="{{selectedCategoryIndex === index}}">✓</text>
+      </view>
+    </scroll-view>
+    <view class="month-picker-footer">
+      <button class="month-picker-btn cancel-btn" bindtap="onCancelCategoryPicker">取消</button>
+      <button class="month-picker-btn confirm-btn" bindtap="onConfirmCategoryPicker">确认</button>
+    </view>
+  </view>
+</view>
+
+<!-- 添加记录弹窗 -->
+<view wx:if="{{showRecordModal}}" class="record-modal-mask" bindtap="onCloseRecordModal">
+  <view class="record-modal" catchtap="noop">
+    <view class="modal-header">
+      <text class="modal-title">{{recordType === 'income' ? '添加收入' : '添加支出'}}</text>
+      <text class="modal-close" bindtap="onCloseRecordModal">✕</text>
+    </view>
+    <view class="modal-content">
+      <view class="form-item">
+        <text class="form-label">分类</text>
+        <picker 
+          wx:if="{{recordType === 'income'}}"
+          mode="selector"
+          range="{{incomeCategories}}"
+          range-key="name"
+          value="{{categoryPickerValue}}"
+          bindchange="onCategoryChange"
+        >
+          <view class="picker-view">
+            {{incomeCategories[categoryPickerValue].name || '请选择'}}
+          </view>
+        </picker>
+        <picker 
+          wx:else
+          mode="selector"
+          range="{{expenseCategories}}"
+          range-key="name"
+          value="{{categoryPickerValue}}"
+          bindchange="onCategoryChange"
+        >
+          <view class="picker-view">
+            {{expenseCategories[categoryPickerValue].name || '请选择'}}
+          </view>
+        </picker>
+      </view>
+      <view class="form-item">
+        <text class="form-label">金额</text>
+        <input 
+          class="form-input"
+          type="digit"
+          placeholder="请输入金额"
+          value="{{recordForm.amount}}"
+          bindinput="onRecordFormInput"
+          data-field="amount"
+        />
+      </view>
+      <view class="form-item">
+        <text class="form-label">{{recordType === 'income' ? '来源' : '商家'}}</text>
+        <input 
+          class="form-input"
+          placeholder="{{recordType === 'income' ? '如：妈妈、兼职' : '如：食堂、超市'}}"
+          value="{{recordForm.source}}"
+          bindinput="onRecordFormInput"
+          data-field="source"
+        />
+      </view>
+      <view class="form-item">
+        <text class="form-label">备注</text>
+        <input 
+          class="form-input"
+          placeholder="可选"
+          value="{{recordForm.note}}"
+          bindinput="onRecordFormInput"
+          data-field="note"
+        />
+      </view>
+      <view class="form-item">
+        <text class="form-label">日期</text>
+        <picker 
+          mode="date"
+          value="{{recordForm.recordDate}}"
+          bindchange="onDateChange"
+        >
+          <view class="picker-view">{{recordForm.recordDate}}</view>
+        </picker>
+      </view>
+    </view>
+    <view class="modal-footer">
+      <button class="modal-btn cancel-btn" bindtap="onCloseRecordModal">取消</button>
+      <button class="modal-btn confirm-btn" bindtap="onConfirmRecord">确认</button>
+    </view>
+  </view>
+</view>

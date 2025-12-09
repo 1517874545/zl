@@ -1,0 +1,60 @@
+<page-meta>
+  <navigation-bar
+    title="AI助手"
+    back="{{true}}"
+    color="#1f2d3d"
+    background="#ffffff"
+  ></navigation-bar>
+</page-meta>
+<scroll-view class="ai-page-scroll" scroll-y scroll-into-view="{{scrollIntoView}}" scroll-with-animation>
+  <view class="ai-page">
+    <view class="ai-messages">
+      <block wx:if="{{messages.length === 0}}">
+        <view class="ai-welcome">
+          <view class="ai-avatar">🤖</view>
+          <text class="ai-welcome-text">你好！我是你的AI助手</text>
+          <text class="ai-welcome-desc">有什么可以帮助你的吗？</text>
+        </view>
+      </block>
+      <block wx:for="{{messages}}" wx:key="id">
+        <view id="msg-{{item.id}}" class="ai-message {{item.role === 'user' ? 'user-message' : 'ai-message-item'}}">
+          <view wx:if="{{item.role === 'assistant'}}" class="ai-avatar-small">🤖</view>
+          <view class="message-content">
+            <text class="message-text">{{item.content}}</text>
+            <text class="message-time">{{formatTime(item.createdAt)}}</text>
+          </view>
+        </view>
+      </block>
+      <view wx:if="{{loading}}" id="msg-loading" class="ai-message ai-message-item">
+        <view class="ai-avatar-small">🤖</view>
+        <view class="message-content">
+          <text class="message-text">正在思考...</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</scroll-view>
+
+<view class="ai-input-bar">
+  <input
+    class="ai-input"
+    placeholder="输入问题..."
+    value="{{inputValue}}"
+    bindinput="onInputChange"
+    confirm-type="send"
+    bindconfirm="onSendMessage"
+  />
+  <button
+    class="ai-send-btn"
+    disabled="{{!canSend || loading}}"
+    bindtap="onSendMessage"
+  >
+    发送
+  </button>
+</view>
+
+<view class="ai-actions">
+  <button class="ai-action-btn" bindtap="onNewConversation">新建对话</button>
+  <button class="ai-action-btn" bindtap="onClearHistory">清空历史</button>
+</view>
+

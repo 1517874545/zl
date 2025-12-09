@@ -1,0 +1,185 @@
+<!--schedule.wxml-->
+<navigation-bar
+  title="课程表"
+  back="{{true}}"
+  color="#1f2d3d"
+  background="#ffffff"
+>
+</navigation-bar>
+<view class="schedule-container">
+
+  
+  <!-- 添加按钮 -->
+  <view class="schedule-header">
+    <view class="title-row">
+      <text class="schedule-title">我的课程</text>
+      <view class="add-btn" bindtap="onAddTap">
+        <text class="plus-icon">＋</text>
+        <text class="plus-text">添加</text>
+      </view>
+    </view>
+    <text class="schedule-subtitle">查看和管理每周课程安排</text>
+  </view>
+
+  <!-- 星期选择器 -->
+  <view class="weekday-selector">
+    <view 
+      wx:for="{{weekdays}}" 
+      wx:key="weekday"
+      class="weekday-btn {{item.isActive ? 'active' : ''}}"
+      data-weekday="{{item.weekday}}"
+      bindtap="onWeekdayTap"
+    >
+      <text class="weekday-short">{{item.shortName}}</text>
+      <text class="weekday-date">{{item.date}}</text>
+    </view>
+  </view>
+
+  <!-- 课程内容区域 -->
+  <view class="schedule-content">
+    <!-- 无课程状态 -->
+    <view wx:if="{{!daySchedule || daySchedule.courses.length === 0}}" class="empty-state">
+      <text class="smiley-icon">😊</text>
+      <text class="empty-text">今天没有课程
+好好放松，享受自由时光！</text>
+    </view>
+
+    <!-- 课程列表 -->
+    <view wx:else class="course-list">
+      <view 
+        wx:for="{{daySchedule.courses}}" 
+        wx:key="id"
+        class="course-card"
+        style="border-left-color: {{item.color}}"
+        data-id="{{item.id}}"
+        data-weekday="{{daySchedule.weekday}}"
+        bindtap="onCourseCardTap"
+      >
+        <view class="course-info">
+          <!-- 左侧时间信息 -->
+          <view class="time-section">
+            <text class="lesson-range">第{{item.startLesson}}-{{item.endLesson}}节</text>
+            <text class="time-range">{{item.startTime}}-{{item.endTime}}</text>
+          </view>
+
+          <!-- 右侧课程详情 -->
+          <view class="course-details">
+            <text class="course-name">{{item.name}}</text>
+            <view class="course-meta">
+              <view class="meta-item">
+                <text class="meta-icon">📍</text>
+                <text class="meta-text">{{item.location}}</text>
+              </view>
+              <view class="meta-item">
+                <text class="meta-icon">👨‍🏫</text>
+                <text class="meta-text">{{item.teacher}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 添加菜单遮罩 -->
+  <view wx:if="{{showAddMenu}}" class="add-menu-overlay" bindtap="hideAddMenu">
+    <view class="add-menu" catchtap="stopPropagation">
+      <text class="menu-title">选择操作</text>
+      <view class="menu-options">
+        <view class="menu-option" bindtap="onImportSchedule">
+          <view class="option-icon">📥</view>
+          <text class="option-text">导入课表</text>
+        </view>
+        <view class="menu-option" bindtap="onAddCourse">
+          <view class="option-icon">➕</view>
+          <text class="option-text">添加课程</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 导入课表弹窗 -->
+  <view wx:if="{{showImportModal}}" class="modal-overlay" bindtap="onCancelImport">
+    <view class="modal-content import" catchtap="stopPropagation">
+      <view class="modal-header">
+        <text class="modal-title">从其他APP导入</text>
+        <text class="modal-close" bindtap="onCancelImport">✕</text>
+      </view>
+      <view class="modal-body">
+        <text class="modal-tip">在其它课表APP中复制导出的JSON数据，并粘贴到下方。</text>
+        <textarea
+          class="import-textarea"
+          placeholder='[{"weekday":1,"name":"心理学导论","startLesson":1,"endLesson":2,"startTime":"08:00","endTime":"09:40","location":"南区302","teacher":"苏老师"}]'
+          value="{{importText}}"
+          bindinput="onImportTextInput"
+          maxlength="-1"
+        />
+        <text class="error-text" wx:if="{{importError}}">{{importError}}</text>
+        <button class="sample-btn" bindtap="onUseImportSample">使用示例数据</button>
+      </view>
+      <view class="modal-footer">
+        <button class="modal-btn ghost" bindtap="onCancelImport">取消</button>
+        <button class="modal-btn primary" bindtap="onConfirmImport">导入</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 添加/编辑课程弹窗 -->
+  <view wx:if="{{showCourseModal}}" class="modal-overlay" bindtap="onCourseModalCancel">
+    <view class="modal-content course" catchtap="stopPropagation">
+      <view class="modal-header">
+        <text class="modal-title">{{editingCourseId ? '编辑课程' : '添加课程'}}</text>
+        <text class="modal-close" bindtap="onCourseModalCancel">✕</text>
+      </view>
+      <view class="modal-body course-form">
+        <view class="form-row">
+        <text class="form-label">星期</text>
+        <picker
+          mode="selector"
+          range="{{pickerWeekLabels}}"
+          bindchange="onCourseWeekdayChange"
+        >
+          <view class="picker-value">{{weekdayLabels[courseForm.weekday]}}</view>
+        </picker>
+        </view>
+        <view class="form-row">
+          <text class="form-label">课程名称</text>
+          <input class="form-input" value="{{courseForm.name}}" data-field="name" bindinput="onCourseFormInput" placeholder="请输入名称" />
+        </view>
+        <view class="form-row">
+          <text class="form-label">上课地点</text>
+          <input class="form-input" value="{{courseForm.location}}" data-field="location" bindinput="onCourseFormInput" placeholder="教学楼/教室" />
+        </view>
+        <view class="form-row">
+          <text class="form-label">授课老师</text>
+          <input class="form-input" value="{{courseForm.teacher}}" data-field="teacher" bindinput="onCourseFormInput" placeholder="教师姓名" />
+        </view>
+        <view class="form-row two-cols">
+          <view class="form-col">
+            <text class="form-label">开始节次</text>
+            <input class="form-input" value="{{courseForm.startLesson}}" data-field="startLesson" bindinput="onCourseFormNumberInput" type="number" />
+          </view>
+          <view class="form-col">
+            <text class="form-label">结束节次</text>
+            <input class="form-input" value="{{courseForm.endLesson}}" data-field="endLesson" bindinput="onCourseFormNumberInput" type="number" />
+          </view>
+        </view>
+        <view class="form-row two-cols">
+          <view class="form-col">
+            <text class="form-label">开始时间</text>
+            <input class="form-input" value="{{courseForm.startTime}}" data-field="startTime" bindinput="onCourseFormInput" placeholder="08:00" />
+          </view>
+          <view class="form-col">
+            <text class="form-label">结束时间</text>
+            <input class="form-input" value="{{courseForm.endTime}}" data-field="endTime" bindinput="onCourseFormInput" placeholder="09:40" />
+          </view>
+        </view>
+      </view>
+      <view class="modal-footer">
+        <button class="modal-btn ghost" bindtap="onCourseModalCancel">取消</button>
+        <button wx:if="{{editingCourseId}}" class="modal-btn danger" bindtap="onCourseDelete">删除</button>
+        <button class="modal-btn primary" bindtap="onCourseModalSubmit">{{editingCourseId ? '保存修改' : '添加课程'}}</button>
+      </view>
+    </view>
+  </view>
+</view>

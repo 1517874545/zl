@@ -1,0 +1,58 @@
+<navigation-bar
+  title="舟旅"
+  back="{{false}}"
+  color="#1f2d3d"
+  background="#ffffff"
+></navigation-bar>
+<scroll-view class="page-scroll" scroll-y type="list">
+  <view class="home-page">
+    <view class="hero-card">
+      <view class="hero-left">
+        <view class="hero-greeting-row">
+          <text class="hero-greeting">{{greeting}}</text>
+          <view class="ai-assistant-btn" bindtap="onAIAssistantTap">
+            <text class="ai-icon">🤖</text>
+            <text class="ai-label">AI助手</text>
+          </view>
+        </view>
+        <view class="hero-date">
+          <text class="hero-day">{{dateInfo.dayDisplay}}</text>
+          <view class="hero-date-meta">
+            <text>{{dateInfo.dateDesc}}</text>
+            <text>{{dateInfo.weekday}}</text>
+          </view>
+        </view>
+      </view>
+      <view class="hero-figure">
+        <image src="{{userProfile.avatar}}" mode="aspectFit" binderror="onHeroAvatarError"></image>
+      </view>
+    </view>
+
+    <view class="anniversary-card" wx:if="{{anniversary.id}}" bindtap="goToAnniversaryDetail">
+      <view class="ann-header">
+        <text class="ann-title">{{anniversary.title}}</text>
+        <text class="ann-days">还有 {{anniversary.daysLeft}} 天</text>
+      </view>
+      <view class="ann-progress">
+        <view class="ann-progress-bar" style="width: {{anniversary.progress}}%;"></view>
+      </view>
+      <text class="ann-subtitle">还有 {{anniversary.remainingText}} 抵达纪念日</text>
+    </view>
+
+    <view class="section-header">
+      <text class="section-title">功能按钮区</text>
+      <text class="section-subtitle">常用工具一键直达</text>
+    </view>
+    <view class="feature-grid">
+      <block wx:for="{{shortcuts}}" wx:key="id">
+        <view class="feature-item" data-id="{{item.id}}" bindtap="onFeatureTap">
+          <view class="feature-icon" style="background: {{item.bgColor}};">
+            <image src="{{item.iconPath}}" mode="aspectFit"></image>
+          </view>
+          <text class="feature-name" style="color: {{item.textColor}};">{{item.name}}</text>
+          <text class="feature-desc">{{item.description}}</text>
+        </view>
+      </block>
+    </view>
+  </view>
+</scroll-view>

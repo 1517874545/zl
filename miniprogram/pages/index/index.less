@@ -1,0 +1,171 @@
+@card-radius: 32rpx;
+
+.home-page {
+  padding: 32rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 32rpx;
+}
+
+.hero-card {
+  background: linear-gradient(120deg, #ffedd9, #ecfdf3);
+  border-radius: @card-radius;
+  padding: 40rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 24rpx 60rpx rgba(255, 159, 67, 0.22);
+}
+
+.hero-left {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.hero-greeting-row {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.hero-greeting {
+  font-size: 32rpx;
+  color: #7e6040;
+}
+
+.ai-assistant-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12rpx;
+  padding: 12rpx 20rpx;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 999rpx;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.05);
+}
+
+.ai-assistant-btn .ai-icon {
+  font-size: 44rpx;
+}
+
+.ai-assistant-btn .ai-label {
+  font-size: 28rpx;
+  color: #1f2d3d;
+}
+
+.hero-date {
+  display: flex;
+  align-items: flex-end;
+  gap: 16rpx;
+}
+
+.hero-day {
+  font-size: 96rpx;
+  font-weight: 700;
+  line-height: 1;
+  color: #1f2d3d;
+}
+
+.hero-date-meta {
+  display: flex;
+  flex-direction: column;
+  font-size: 28rpx;
+  color: #606266;
+}
+
+.hero-figure image {
+  width: 160rpx;
+  height: 160rpx;
+}
+
+.anniversary-card {
+  background: #ffffff;
+  border-radius: @card-radius;
+  padding: 32rpx;
+  box-shadow: 0 16rpx 60rpx rgba(255, 159, 67, 0.08);
+}
+
+.ann-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.ann-title {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #1f2d3d;
+}
+
+.ann-days {
+  font-size: 28rpx;
+  color: #ff9f43;
+}
+
+.ann-progress {
+  width: 100%;
+  height: 16rpx;
+  background: #f5f5f5;
+  border-radius: 8rpx;
+  overflow: hidden;
+  margin-bottom: 16rpx;
+}
+
+.ann-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #ff9f43, #ff6b8b);
+  border-radius: 8rpx;
+}
+
+.ann-subtitle {
+  font-size: 28rpx;
+  color: #606266;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24rpx;
+}
+
+.feature-item {
+  background: #ffffff;
+  border-radius: 28rpx;
+  padding: 28rpx 16rpx;
+  text-align: center;
+  box-shadow: 0 12rpx 32rpx rgba(0, 0, 0, 0.04);
+}
+
+.feature-icon {
+  width: 108rpx;
+  height: 108rpx;
+  border-radius: 28rpx;
+  margin: 0 auto 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.feature-icon image {
+  width: 88rpx;
+  height: 88rpx;
+}
+
+.feature-name {
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+.feature-desc {
+  display: block;
+  margin-top: 8rpx;
+  font-size: 22rpx;
+  color: #909399;
+}

@@ -1,0 +1,256 @@
+.pomodoro-page {
+  padding: 40rpx 20rpx;
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #FF6B6B 0%, #FF8E8E 100%);
+}
+
+.timer-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60rpx 0;
+}
+
+.timer-circle {
+  width: 500rpx;
+  height: 500rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 8rpx 40rpx rgba(0, 0, 0, 0.2);
+}
+
+.timer-progress-bg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #fff;
+  transition: opacity 0.3s ease;
+}
+
+.timer-inner {
+  width: 440rpx;
+  height: 440rpx;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 10;
+}
+
+.timer-time {
+  font-size: 100rpx;
+  font-weight: bold;
+  color: #FF6B6B;
+  line-height: 1;
+  margin-bottom: 20rpx;
+}
+
+.timer-status {
+  font-size: 28rpx;
+  color: #999;
+  margin-bottom: 10rpx;
+}
+
+.timer-task {
+  font-size: 24rpx;
+  color: #666;
+  max-width: 300rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.control-section {
+  display: flex;
+  justify-content: center;
+  gap: 30rpx;
+  margin: 40rpx 0;
+}
+
+.control-btn {
+  padding: 24rpx 60rpx;
+  border-radius: 50rpx;
+  font-size: 32rpx;
+  border: none;
+  color: #fff;
+  
+  &.start {
+    background: #4CAF50;
+  }
+  
+  &.pause {
+    background: #FF9800;
+  }
+  
+  &.reset {
+    background: rgba(255, 255, 255, 0.3);
+  }
+}
+
+.task-section {
+  margin: 40rpx 0;
+  padding: 0 20rpx;
+}
+
+.task-input {
+  width: 100%;
+  padding: 24rpx;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 12rpx;
+  font-size: 28rpx;
+}
+
+.stats-section {
+  display: flex;
+  gap: 20rpx;
+  margin: 40rpx 0;
+  padding: 0 20rpx;
+}
+
+.stats-card {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 16rpx;
+  padding: 30rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.1);
+}
+
+.stats-label {
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 10rpx;
+}
+
+.stats-value {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #FF6B6B;
+  line-height: 1;
+}
+
+.stats-unit {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 10rpx;
+}
+
+.settings-section {
+  padding: 0 20rpx;
+  margin-top: 40rpx;
+}
+
+.settings-btn {
+  width: 100%;
+  padding: 24rpx;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  color: #fff;
+  border: none;
+}
+
+.settings-modal-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.settings-modal {
+  width: 80%;
+  max-width: 600rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.modal-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.modal-close {
+  font-size: 40rpx;
+  color: #999;
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.settings-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 30rpx;
+}
+
+.setting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.setting-label {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.setting-input {
+  width: 120rpx;
+  padding: 12rpx;
+  border: 1rpx solid #ddd;
+  border-radius: 8rpx;
+  text-align: center;
+  font-size: 28rpx;
+}
+
+.modal-footer {
+  padding: 30rpx;
+  border-top: 1rpx solid #f0f0f0;
+}
+
+.save-btn {
+  width: 100%;
+  padding: 24rpx;
+  background: #FF6B6B;
+  color: #fff;
+  border-radius: 12rpx;
+  font-size: 30rpx;
+  border: none;
+}
+

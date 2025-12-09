@@ -1,0 +1,36 @@
+<page-meta>
+  <navigation-bar
+    title="AI助手"
+    back="{{true}}"
+    color="#1f2d3d"
+    background="#ffffff"
+  ></navigation-bar>
+</page-meta>
+
+<view class="conversation-list-page">
+  <view class="conversation-header">
+    <view class="header-title">我的对话</view>
+    <button class="new-conversation-btn" bindtap="onNewConversation">+ 新建对话</button>
+  </view>
+
+  <scroll-view class="conversation-scroll" scroll-y>
+    <view class="conversation-list">
+      <block wx:if="{{conversations.length === 0}}">
+        <view class="empty-state">
+          <view class="empty-icon">💬</view>
+          <text class="empty-text">还没有对话记录</text>
+          <text class="empty-desc">点击上方按钮开始新对话</text>
+        </view>
+      </block>
+      <block wx:for="{{conversations}}" wx:key="id">
+        <view class="conversation-item" bindtap="onConversationTap" data-id="{{item.id}}">
+          <view class="conversation-content">
+            <text class="conversation-title">{{item.title}}</text>
+            <text class="conversation-time">{{item.formattedTime}}</text>
+          </view>
+          <view class="conversation-arrow">></view>
+        </view>
+      </block>
+    </view>
+  </scroll-view>
+</view>

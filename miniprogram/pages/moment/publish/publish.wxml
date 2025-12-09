@@ -1,0 +1,124 @@
+<navigation-bar
+  title="发布动态"
+  back="{{true}}"
+  color="#1f2d3d"
+  background="#ffffff"
+></navigation-bar>
+<view class="publish-page">
+
+  <view class="publish-body">
+    <textarea
+      class="publish-textarea"
+      placeholder="记录此刻的灵感..."
+      value="{{content}}"
+      bindinput="onContentInput"
+      maxlength="280"
+    ></textarea>
+
+    <view class="publish-images-wrapper">
+      <view class="publish-images">
+        <block wx:for="{{images}}" wx:key="*this">
+          <view class="publish-image-item">
+            <image src="{{item}}" mode="aspectFill"></image>
+            <view class="image-remove" data-index="{{index}}" bindtap="onRemoveImage">✕</view>
+          </view>
+        </block>
+        <view
+          class="publish-image-add"
+          wx:if="{{images.length < 9}}"
+          bindtap="onAddImage"
+        >
+          +
+        </view>
+      </view>
+      <view class="publish-actions">
+        <view class="action-btn cancel-btn" bindtap="onCancel">取消</view>
+        <view class="action-btn submit-btn" bindtap="onSubmit">发布</view>
+      </view>
+    </view>
+
+    <view class="publish-meta">
+      <view class="meta-row">
+        <text class="meta-label">心情</text>
+        <view class="meta-value">
+          <view wx:if="{{mood && mood !== ''}}" class="mood-tag">
+            <text>{{moodEmoji}}</text>
+            <text>{{moodName}}</text>
+            <text class="remove-btn" bindtap="onRemoveMood">✕</text>
+          </view>
+          <text wx:else class="meta-placeholder">选择心情</text>
+          <text class="meta-action" bindtap="onShowMoodPicker">选择</text>
+        </view>
+      </view>
+      <view class="meta-row">
+        <text class="meta-label">话题</text>
+        <view class="topics-container">
+          <block wx:for="{{topics}}" wx:key="*this">
+            <view class="topic-tag">
+              <text>#{{item}}</text>
+              <text class="topic-remove" data-index="{{index}}" bindtap="onRemoveTopic">✕</text>
+            </view>
+          </block>
+          <view wx:if="{{topics.length < 5}}" class="topic-add" bindtap="onShowTopicInput">
+            <text>+ 添加话题</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="location-row">
+      <view class="location-info">
+        <text class="location-label">地点</text>
+        <input 
+          class="location-input" 
+          placeholder="添加地点" 
+          value="{{location}}" 
+          bindinput="onLocationInput"
+          type="text"
+          maxlength="50"
+        />
+      </view>
+      <view class="location-btn" bindtap="onChooseLocation">定位</view>
+    </view>
+  </view>
+</view>
+
+<!-- 心情选择器 -->
+<view wx:if="{{showMoodPicker}}" class="mood-picker-mask" bindtap="onCloseMoodPicker">
+  <view class="mood-picker-panel" catchtap="noop">
+    <view class="picker-header">
+      <text class="picker-title">选择心情</text>
+      <text class="picker-close" bindtap="onCloseMoodPicker">✕</text>
+    </view>
+    <view class="picker-body">
+      <block wx:for="{{moods}}" wx:key="id">
+        <view class="mood-item" data-mood="{{item.id}}" bindtap="onMoodSelect">
+          <text class="mood-emoji">{{item.emoji}}</text>
+          <text>{{item.name}}</text>
+        </view>
+      </block>
+    </view>
+  </view>
+</view>
+
+<!-- 话题输入 -->
+<view wx:if="{{showTopicInput}}" class="topic-input-mask" bindtap="onCloseTopicInput">
+  <view class="topic-input-panel" catchtap="noop">
+    <view class="input-header">
+      <text class="input-title">添加话题</text>
+      <text class="input-close" bindtap="onCloseTopicInput">✕</text>
+    </view>
+    <view class="input-body">
+      <input
+        class="topic-input"
+        placeholder="输入话题（可带#号）"
+        value="{{topicInputValue}}"
+        bindinput="onTopicInput"
+        confirm-type="done"
+        bindconfirm="onAddTopic"
+      />
+      <button class="topic-add-btn" bindtap="onAddTopic">添加</button>
+    </view>
+  </view>
+</view>
+

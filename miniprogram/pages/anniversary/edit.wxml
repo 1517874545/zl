@@ -1,0 +1,61 @@
+<navigation-bar
+  title="{{pageTitle}}"
+  back="{{true}}"
+  color="#1f2d3d"
+  background="#ffffff"
+></navigation-bar>
+<scroll-view class="page-scroll" scroll-y type="list">
+  <view class="anniv-edit-page">
+    <view class="form-card">
+      <view class="form-row">
+        <text class="form-label">事件名称</text>
+        <input
+          class="form-input"
+          placeholder="例如：结婚纪念日"
+          value="{{title}}"
+          bindinput="onTitleInput"
+        />
+      </view>
+      <view class="form-row">
+        <text class="form-label">目标日期</text>
+        <picker mode="date" value="{{targetDate}}" bindchange="onDateChange">
+          <view class="form-picker">
+            <text wx:if="{{targetDate}}">{{targetDate}}</text>
+            <text wx:else class="placeholder">请选择日期</text>
+          </view>
+        </picker>
+      </view>
+      <view class="form-row">
+        <text class="form-label">是否置顶</text>
+        <switch
+          checked="{{pinned}}"
+          color="#FF9F43"
+          bindchange="onPinnedChange"
+        />
+      </view>
+      <view class="form-row">
+        <text class="form-label">是否重复</text>
+        <picker
+          mode="selector"
+          range="{{repeatOptions}}"
+          value="{{repeatIndex}}"
+          bindchange="onRepeatChange"
+        >
+          <view class="form-picker">
+            <text>{{repeatOptions[repeatIndex]}}</text>
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <button class="submit-btn" bindtap="onSubmit">保存纪念日</button>
+    <button class="delete-btn" wx:if="{{id}}" bindtap="onDelete">删除纪念日</button>
+  </view>
+</scroll-view>
+
+
+
+
+
+
+

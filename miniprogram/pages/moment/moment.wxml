@@ -1,0 +1,121 @@
+<navigation-bar
+  title="Moment"
+  back="{{false}}"
+  color="#1f2d3d"
+  background="#ffffff"
+></navigation-bar>
+<scroll-view class="page-scroll" scroll-y type="list">
+  <view class="moment-page">
+    <view class="moment-title">
+      <view class="title-text">
+        <text class="title-main">生活动态</text>
+        <text class="title-sub">记录每一次心情闪光</text>
+      </view>
+      <view class="message-icon" bindtap="onMessageBellTap">
+        <text>🔔</text>
+        <view class="message-badge" wx:if="{{unreadCount}}">{{unreadCount}}</view>
+      </view>
+    </view>
+    <block wx:for="{{moments}}" wx:key="id">
+      <view class="moment-card">
+        <view class="moment-header">
+          <image class="avatar" src="{{item.avatar}}" mode="aspectFill" binderror="onAvatarError" data-mid="{{item.id}}"></image>
+          <view class="header-meta">
+            <text class="nickname">{{item.nickname}}</text>
+            <text class="sub">{{item.time}} · {{item.location}}</text>
+          </view>
+          <view class="moment-delete" data-mid="{{item.id}}" bindtap="onDeleteMoment">删除</view>
+        </view>
+        <view class="moment-meta" wx:if="{{item.mood || (item.topics && item.topics.length)}}">
+          <view wx:if="{{item.mood}}" class="mood-badge">
+            <text class="mood-emoji">{{getMoodEmoji(item.mood)}}</text>
+            <text class="mood-name">{{getMoodName(item.mood)}}</text>
+          </view>
+          <view wx:if="{{item.topics && item.topics.length}}" class="topics-list">
+            <block wx:for="{{item.topics}}" wx:key="*this">
+              <text class="topic-tag">#{{item}}</text>
+            </block>
+          </view>
+        </view>
+        <view class="moment-content">{{item.content}}</view>
+        <view class="moment-images {{item.images.length === 1 ? 'single' : ''}}" wx:if="{{item.images && item.images.length > 0}}">
+          <block wx:for="{{item.images}}" wx:for-item="photo" wx:for-index="photoIndex" wx:key="*this">
+            <image
+              src="{{photo}}"
+              mode="aspectFill"
+              data-mid="{{item.id}}"
+              data-index="{{photoIndex}}"
+              bindtap="onPreviewImage"
+              binderror="onImageError"
+            ></image>
+          </block>
+        </view>
+        <view class="moment-actions">
+          <view class="action-btn" data-mid="{{item.id}}" bindtap="onLikeTap">
+            <text class="action-icon">{{item.likedByMe ? '❤️' : '🤍'}}</text>
+            <text class="action-text">{{item.likes || 0}}</text>
+          </view>
+          <view class="action-btn" data-mid="{{item.id}}" bindtap="onCommentEntry">
+            <text class="action-icon">💬</text>
+            <text class="action-text">评论 {{item.comments.length}}</text>
+          </view>
+        </view>
+        <view class="moment-comments" wx:if="{{item.comments.length}}">
+          <text class="comment-title">评论区</text>
+          <block wx:for="{{item.comments}}" wx:for-item="comment" wx:key="id">
+            <view class="comment-row">
+              <text class="comment-name">{{comment.nickname}}：</text>
+              <text class="comment-text">{{comment.content}}</text>
+            </view>
+          </block>
+        </view>
+        <view class="comment-input" wx:if="{{activeCommentId === item.id}}">
+          <input
+            class="comment-field"
+            type="text"
+            placeholder="说点什么..."
+            value="{{commentDrafts[item.id] || ''}}"
+            data-mid="{{item.id}}"
+            bindinput="onCommentInputChange"
+          />
+              <button
+                class="comment-send"
+                wx:if="{{commentDrafts[item.id] && commentDrafts[item.id].length}}"
+                data-mid="{{item.id}}"
+                bindtap="onCommentSend"
+              >
+                发送
+              </button>
+        </view>
+      </view>
+    </block>
+  </view>
+</scroll-view>
+
+<view class="moment-fab" bindtap="onPublishTap">
+  <text class="fab-icon">✍️</text>
+  <text class="fab-label">发布</text>
+</view>
+
+<!-- 消息面板 -->
+<view wx:if="{{showMessagePanel}}" class="message-panel-mask" bindtap="onCloseMessagePanel">
+  <view class="message-panel" catchtap="noop">
+    <view class="panel-header">
+      <text class="panel-title">消息中心</text>
+      <text class="panel-action" bindtap="onMarkMessagesRead">标记已读</text>
+    </view>
+    <view class="panel-list" wx:if="{{notifications.length}}">
+      <block wx:for="{{notifications}}" wx:key="id">
+        <view class="panel-item {{!item.read ? 'unread' : ''}}">
+          <text class="panel-item-from">{{item.from}}</text>
+          <text class="panel-item-text">{{item.message}}</text>
+          <text class="panel-item-time">{{item.time}}</text>
+        </view>
+      </block>
+    </view>
+    <view class="panel-empty" wx:else>暂无消息</view>
+  </view>
+</view>
+
+<!-- 评论输入已内嵌展示 -->
+

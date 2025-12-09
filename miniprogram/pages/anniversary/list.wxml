@@ -1,0 +1,46 @@
+<navigation-bar
+  title="纪念日"
+  back="{{true}}"
+  color="#1f2d3d"
+  background="#ffffff"
+>
+</navigation-bar>
+<scroll-view class="page-scroll" scroll-y type="list">
+  <view class="anniv-page">
+    <view class="anniv-header">
+      <div class="title-row">
+        <text class="anniv-title">纪念日清单</text>
+        <view class="anniv-plus" bindtap="onAddTap">
+          <text class="plus-icon">＋</text>
+          <text class="plus-text">添加</text>
+        </view>
+      </div>
+      <text class="anniv-subtitle">为每个特别的日子倒计时</text>
+    </view>
+    <block wx:if="{{!list.length}}">
+      <view class="anniv-empty">
+        <text class="empty-main">还没有创建纪念日</text>
+        <text class="empty-sub">点击右上角 + 按钮，添加第一个纪念日吧</text>
+      </view>
+    </block>
+    <block wx:for="{{list}}" wx:key="id">
+      <view class="anniv-card" data-id="{{item.id}}" bindtap="onCardTap">
+        <view class="anniv-left">
+          <text class="anniv-name">{{item.title}} · 还有</text>
+          <text class="anniv-date">{{item.target}}</text>
+        </view>
+        <view class="anniv-right">
+          <text class="anniv-days">{{item.daysLeft}}</text>
+          <text class="anniv-days-label">天</text>
+        </view>
+      </view>
+    </block>
+  </view>
+</scroll-view>
+
+
+
+
+
+
+

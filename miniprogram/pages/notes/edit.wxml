@@ -1,0 +1,182 @@
+<navigation-bar
+  title="{{navTitle || '新建笔记'}}"
+  back="{{true}}"
+  color="#1f2d3d"
+  background="#ffffff"
+  bindback="onBackTap"
+>
+  <view slot="right" class="nav-actions">
+    <view wx:if="{{id}}" class="nav-delete-btn" bindtap="onDeleteTap">
+      <text>删除</text>
+    </view>
+    <view class="nav-save-btn" bindtap="onSaveTap">
+      <text>保存</text>
+    </view>
+  </view>
+</navigation-bar>
+<scroll-view class="page-scroll" scroll-y type="list">
+  <view class="note-edit-page">
+    <view class="editor-card" wx:if="{{templateType === 'blank' || !templateType}}">
+      <textarea
+        class="note-textarea"
+        placeholder="记录今天的灵感、待办或心情..."
+        value="{{content}}"
+        auto-height="{{true}}"
+        adjust-position="{{false}}"
+        bindinput="onContentInput"
+      />
+    </view>
+    
+    <!-- 点阵模板 -->
+    <view class="editor-card template-dot" wx:if="{{templateType === 'dot'}}">
+      <textarea
+        class="note-textarea template-dot-textarea"
+        placeholder="记录今天的灵感、待办或心情..."
+        value="{{content}}"
+        auto-height="{{true}}"
+        adjust-position="{{false}}"
+        bindinput="onContentInput"
+      />
+    </view>
+    
+    <!-- 方格模板 -->
+    <view class="editor-card template-grid" wx:if="{{templateType === 'grid'}}">
+      <textarea
+        class="note-textarea template-grid-textarea"
+        placeholder="记录今天的灵感、待办或心情..."
+        value="{{content}}"
+        auto-height="{{true}}"
+        adjust-position="{{false}}"
+        bindinput="onContentInput"
+      />
+    </view>
+    
+    <!-- 笔记模板 -->
+    <view class="editor-card template-line" wx:if="{{templateType === 'line'}}">
+      <textarea
+        class="note-textarea template-line-textarea"
+        placeholder="记录今天的灵感、待办或心情..."
+        value="{{content}}"
+        auto-height="{{true}}"
+        adjust-position="{{false}}"
+        bindinput="onContentInput"
+      />
+    </view>
+    
+    <!-- 复古模板 -->
+    <view class="editor-card template-vintage" wx:if="{{templateType === 'vintage1' || templateType === 'vintage2'}}">
+      <textarea
+        class="note-textarea template-vintage-textarea"
+        placeholder="记录今天的灵感、待办或心情..."
+        value="{{content}}"
+        auto-height="{{true}}"
+        adjust-position="{{false}}"
+        bindinput="onContentInput"
+      />
+    </view>
+
+    <view class="note-meta-card">
+      <view class="meta-row">
+        <text class="meta-label">分类</text>
+        <view class="meta-value">
+          <text wx:if="{{categoryId && categoryName}}" class="category-tag">{{categoryName}}</text>
+          <text wx:else class="meta-placeholder">未分类选择</text>
+          <view class="meta-action" bindtap="onShowCategoryPicker">
+            <text>选择</text>
+          </view>
+          <view wx:if="{{categoryId}}" class="meta-action" bindtap="onRemoveCategory">
+            <text>移除</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="attachment-card">
+      <view class="attachment-header">
+        <text class="attachment-title">附件</text>
+        <text class="attachment-desc">可添加照片或截图</text>
+      </view>
+      <view class="attachment-grid">
+        <block wx:for="{{attachments}}" wx:key="*this">
+          <view class="attachment-item">
+            <image
+              src="{{item}}"
+              mode="aspectFill"
+              data-index="{{index}}"
+              bindtap="onPreviewAttachment"
+            ></image>
+            <view
+              class="attachment-remove"
+              data-index="{{index}}"
+              bindtap="onRemoveAttachment"
+            >
+              ✕
+            </view>
+          </view>
+        </block>
+        <view class="attachment-add" bindtap="onAddAttachment">
+          <text class="add-icon">＋</text>
+          <text class="add-text">添加图片</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</scroll-view>
+
+
+<!-- 分类选择器 -->
+<view wx:if="{{showCategoryPicker}}" class="category-picker-mask" bindtap="onCloseCategoryPicker">
+  <view class="category-picker-panel" catchtap="noop">
+    <view class="picker-header">
+      <text class="picker-title">选择分类</text>
+      <view class="picker-close" bindtap="onCloseCategoryPicker">
+        <text>✕</text>
+      </view>
+    </view>
+    <view class="picker-body">
+      <view class="picker-item" data-id="" bindtap="onCategorySelect">
+        <text>未分类</text>
+      </view>
+      <block wx:for="{{categories}}" wx:key="id">
+        <view class="picker-item" data-id="{{item.id}}" bindtap="onCategorySelect">
+          <view class="picker-color" style="background: {{item.color}};"></view>
+          <text>{{item.name}}</text>
+        </view>
+      </block>
+      <view class="picker-item picker-item-add" data-id="__add__" bindtap="onCategorySelect">
+        <text>+ 添加分类</text>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 标签输入 -->
+<view wx:if="{{showTagInput}}" class="tag-input-mask" bindtap="onCloseTagInput">
+  <view class="tag-input-panel" catchtap="noop">
+    <view class="input-header">
+      <text class="input-title">添加标签</text>
+      <view class="input-close" bindtap="onCloseTagInput">
+        <text>✕</text>
+      </view>
+    </view>
+    <view class="input-body">
+      <input
+        class="tag-input"
+        placeholder="输入标签名称"
+        value="{{tagInputValue}}"
+        bindinput="onTagInput"
+        confirm-type="done"
+        bindconfirm="onAddTag"
+        focus="{{showTagInput}}"
+      />
+      <button class="tag-add-btn" bindtap="onAddTag">添加</button>
+    </view>
+  </view>
+</view>
+
+
+
+
+
+
+

@@ -1,0 +1,172 @@
+[
+  {
+    "weekday": 1,
+    "name": "经典模型 ",
+    "location": "(1-4节)1-5周/校区:裕华校区",
+    "teacher": "师:外聘教师十/教学班:经典",
+    "startLesson": 1,
+    "endLesson": 4,
+    "startTime": "08:00",
+    "endTime": "08:45"
+  },
+  {
+    "weekday": 2,
+    "name": "经典模型 ",
+    "location": "(1-4节)1-5周/校区:裕华校区",
+    "teacher": "师:外聘教师十/教学班:经典",
+    "startLesson": 1,
+    "endLesson": 4,
+    "startTime": "08:00",
+    "endTime": "08:45"
+  },
+  {
+    "weekday": 3,
+    "name": "项目管理",
+    "location": "(1-2节)1-6周/校区:裕华校区",
+    "teacher": "未填写",
+    "startLesson": 1,
+    "endLesson": 2,
+    "startTime": "08:00",
+    "endTime": "08:45"
+  },
+  {
+    "weekday": 4,
+    "name": "数字图像处理",
+    "location": "(1-4节)6-9周/校区:裕华校区",
+    "teacher": "师:外聘教师十/教学班:数字",
+    "startLesson": 1,
+    "endLesson": 4,
+    "startTime": "08:00",
+    "endTime": "08:45"
+  },
+  {
+    "weekday": 5,
+    "name": "经典模型 ",
+    "location": "(1-4节)1-5周/校区:裕华校区",
+    "teacher": "师:外聘教师十/教学班:经典",
+    "startLesson": 1,
+    "endLesson": 4,
+    "startTime": "08:00",
+    "endTime": "08:45"
+  },
+  {
+    "weekday": 3,
+    "name": "习近平新时代中国特色",
+    "location": "(3-5节)1-18周/校区:裕华校",
+    "teacher": "403/教师:张彩云/教学班:习",
+    "startLesson": 3,
+    "endLesson": 5,
+    "startTime": "10:00",
+    "endTime": "10:45"
+  },
+  {
+    "weekday": 2,
+    "name": "C202/教师:外聘教师十/教学",
+    "location": "未填写",
+    "teacher": "C202/教师:外聘教师十/教学",
+    "startLesson": 1,
+    "endLesson": 2,
+    "startTime": "08:00",
+    "endTime": "08:45"
+  },
+  {
+    "weekday": 5,
+    "name": "C202/教师:外聘教师十/教学",
+    "location": "未填写",
+    "teacher": "C202/教师:外聘教师十/教学",
+    "startLesson": 1,
+    "endLesson": 2,
+    "startTime": "08:00",
+    "endTime": "08:45"
+  },
+  {
+    "weekday": 1,
+    "name": "经典模型 ",
+    "location": "(6-9节)1-5周/校区:裕华校区",
+    "teacher": "师:外聘教师十/教学班:经典",
+    "startLesson": 6,
+    "endLesson": 9,
+    "startTime": "14:55",
+    "endTime": "15:40"
+  },
+  {
+    "weekday": 2,
+    "name": "经典模型 ",
+    "location": "(6-9节)1-5周/校区:裕华校区",
+    "teacher": "师:外聘教师十/教学班:经典",
+    "startLesson": 6,
+    "endLesson": 9,
+    "startTime": "14:55",
+    "endTime": "15:40"
+  },
+  {
+    "weekday": 3,
+    "name": "数字图像处理",
+    "location": "(6-9节)6-9周/校区:裕华校区",
+    "teacher": "师:外聘教师十/教学班:数字",
+    "startLesson": 6,
+    "endLesson": 9,
+    "startTime": "14:55",
+    "endTime": "15:40"
+  },
+  {
+    "weekday": 5,
+    "name": "经典模型 ",
+    "location": "(6-9节)1-5周/校区:裕华校区",
+    "teacher": "师:外聘教师十/教学班:经典",
+    "startLesson": 6,
+    "endLesson": 9,
+    "startTime": "14:55",
+    "endTime": "15:40"
+  },
+  {
+    "weekday": 1,
+    "name": "学时:5/总学时:50/学分:4. 0",
+    "location": "(6-9节)14-18周/校区:裕华校",
+    "teacher": "C202/教师:外聘教师十/教学",
+    "startLesson": 6,
+    "endLesson": 9,
+    "startTime": "14:55",
+    "endTime": "15:40"
+  },
+  {
+    "weekday": 2,
+    "name": "学时:5/总学时:50/学分:4. 0",
+    "location": "(6-9节)14-18周/校区:裕华校",
+    "teacher": "C202/教师:外聘教师十/教学",
+    "startLesson": 6,
+    "endLesson": 9,
+    "startTime": "14:55",
+    "endTime": "15:40"
+  },
+  {
+    "weekday": 1,
+    "name": "歌剧名作鉴赏",
+    "location": "(11-12节)10-18周/校区:裕华",
+    "teacher": "105/教师:吴佳桐/教学班:歌",
+    "startLesson": 11,
+    "endLesson": 12,
+    "startTime": "08:00",
+    "endTime": "08:45"
+  },
+  {
+    "weekday": 3,
+    "name": "形势与政策五",
+    "location": "(11-12节)10周/校区:裕华校",
+    "teacher": "204/教师:胡晗萌/教学班:形",
+    "startLesson": 11,
+    "endLesson": 12,
+    "startTime": "08:00",
+    "endTime": "08:45"
+  },
+  {
+    "weekday": 3,
+    "name": "件工程8班/考核方式:未安排",
+    "location": "(11-12节)13周/校区:裕华校",
+    "teacher": "204/教师:于珂/教学班:形势",
+    "startLesson": 11,
+    "endLesson": 12,
+    "startTime": "08:00",
+    "endTime": "08:45"
+  }
+]
