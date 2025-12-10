@@ -38,8 +38,8 @@ const featureShortcuts: FeatureShortcut[] = [
   },
   {
     id: 'saving',
-    name: '存钱罐',
-    description: '家庭预算好帮手',
+    name: '记账本',
+    description: '收支随手记',
     bgColor: '#FFF4FA',
     textColor: '#FF9FDC',
     iconPath: '../../assets/feature-saving.png',
@@ -157,10 +157,15 @@ App<IAppOption>({
     userProfile,
   },
   async onLaunch() {
+    // 背景拉取在真机可能受限，失败不影响主流程
     if (wx.setBackgroundFetchToken) {
-      wx.setBackgroundFetchToken({
-        token: 'life-manager-demo',
-      })
+      try {
+        wx.setBackgroundFetchToken({
+          token: 'life-manager-demo',
+        })
+      } catch (err) {
+        console.warn('setBackgroundFetchToken skipped', err)
+      }
     }
     
     // 从数据库加载初始数据

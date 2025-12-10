@@ -68,9 +68,20 @@
       >
         <text class="city-name">{{item.name}}</text>
         <text class="city-default" wx:if="{{item.isDefault}}">默认</text>
+        <text 
+          class="city-delete" 
+          wx:if="{{deleteMode}}" 
+          catchtap="onDeleteCity" 
+          data-id="{{item.id}}"
+        >删除</text>
       </view>
-      <view class="city-item add" bindtap="onAddCity">
-        <text>+ 添加城市</text>
+      <view class="city-actions">
+        <view class="city-action add" bindtap="onAddCity">
+          <text>+ 添加城市</text>
+        </view>
+        <view class="city-action delete" bindtap="onToggleDeleteMode">
+          <text>{{deleteMode ? '完成' : '删除'}}</text>
+        </view>
       </view>
     </view>
   </view>

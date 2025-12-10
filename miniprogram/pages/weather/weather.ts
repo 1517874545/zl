@@ -1,5 +1,5 @@
 // 天气页面
-import { loadWeather, loadWeatherForecast, loadCityList, addCity, setDefaultCity } from '../../utils/features/weather'
+import { loadWeather, loadWeatherForecast, loadCityList, addCity, setDefaultCity, deleteCity } from '../../utils/features/weather'
 import { CONFIG } from '../../utils/config'
 
 interface WeatherData {
@@ -23,6 +23,7 @@ interface WeatherData {
     isDefault: boolean
   }>
   showCityPicker: boolean
+  deleteMode: boolean
 }
 
 Page<WeatherData, WechatMiniprogram.Page.CustomOption>({
@@ -38,6 +39,7 @@ Page<WeatherData, WechatMiniprogram.Page.CustomOption>({
     forecast: [],
     cityList: [],
     showCityPicker: false,
+    deleteMode: false,
   },
 
   onLoad() {
@@ -471,11 +473,11 @@ Page<WeatherData, WechatMiniprogram.Page.CustomOption>({
   },
 
   onChangeCity() {
-    this.setData({ showCityPicker: true })
+    this.setData({ showCityPicker: true, deleteMode: false })
   },
 
   onCloseCityPicker() {
-    this.setData({ showCityPicker: false })
+    this.setData({ showCityPicker: false, deleteMode: false })
   },
 
   async onSelectCity(event: WechatMiniprogram.TouchEvent) {
@@ -486,7 +488,7 @@ Page<WeatherData, WechatMiniprogram.Page.CustomOption>({
     } catch (err) {
       console.warn('setDefaultCity fail, fallback to local display', err)
     }
-    this.setData({ showCityPicker: false })
+    this.setData({ showCityPicker: false, deleteMode: false })
     await this.loadWeatherData(undefined, city)
   },
 
@@ -513,6 +515,41 @@ Page<WeatherData, WechatMiniprogram.Page.CustomOption>({
           }
         }
       },
+    })
+  },
+
+  onToggleDeleteMode() {
+    this.setData({ deleteMode: !this.data.deleteMode })
+  },
+
+  async onDeleteCity(event: WechatMiniprogram.TouchEvent) {
+    const id = event.currentTarget.dataset.id as string | undefined
+    if (!id) return
+    wx.showModal({
+      title: '删除城市',
+      content: '确认删除该城市吗？',
+      success: async (res) => {
+        if (!res.confirm) return
+        let loadingShown = false
+        try {
+          wx.showLoading({ title: '删除中...' })
+          loadingShown = true
+          await deleteCity(id)
+          const cityList = await loadCityList()
+          this.setData({
+            cityList,
+            // 如果列表为空或只剩一个，自动退出删除模式
+            deleteMode: cityList.length > 0 && this.data.deleteMode ? this.data.deleteMode : false,
+          })
+          wx.showToast({ title: '已删除', icon: 'success' })
+        } catch (error) {
+          wx.showToast({ title: '删除失败', icon: 'none' })
+        } finally {
+          if (loadingShown) {
+            wx.hideLoading()
+          }
+        }
+      }
     })
   },
 

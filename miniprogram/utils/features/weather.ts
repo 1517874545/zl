@@ -333,6 +333,16 @@ export async function addCity(city: { name: string; isDefault?: boolean }): Prom
   }
 }
 
+// 删除城市
+export async function deleteCity(cityId: string): Promise<void> {
+  try {
+    await dbWeather.deleteCity(cityId)
+  } catch (error) {
+    console.error('deleteCity error', error)
+    throw error
+  }
+}
+
 // 设置默认城市
 export async function setDefaultCity(cityId: string): Promise<void> {
   try {

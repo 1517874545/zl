@@ -202,11 +202,6 @@
   &.default {
     background: #f0f7ff;
   }
-  
-  &.add {
-    color: #2196F3;
-    border-bottom: none;
-  }
 }
 
 .city-name {
@@ -220,5 +215,35 @@
   background: #e3f2fd;
   padding: 4rpx 12rpx;
   border-radius: 8rpx;
+}
+
+.city-delete {
+  font-size: 26rpx;
+  color: #ff4d4f;
+  padding: 8rpx 16rpx;
+}
+
+.city-actions {
+  display: flex;
+  gap: 20rpx;
+  padding: 24rpx 0 0;
+  justify-content: flex-start;
+}
+
+.city-action {
+  flex: 1;
+  text-align: center;
+  padding: 22rpx 0;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  border: 1rpx solid #e5e5e5;
+  &.add {
+    color: #2196F3;
+    border-color: #2196F3;
+  }
+  &.delete {
+    color: #ff4d4f;
+    border-color: #ff4d4f;
+  }
 }
 
